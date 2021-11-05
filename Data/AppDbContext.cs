@@ -5,7 +5,7 @@ namespace MyApi.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Category> Catetgorys { get; set; }
+        public DbSet<Category> Categorys { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlite("DataSource=app.db;Cache=Shared");
