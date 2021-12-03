@@ -50,42 +50,44 @@ namespace MyApi.Controllers
             }          
         }
 
-        // [HttpPut("categorys/{id}")]
-        // public async Task<IActionResult> UpdateAsync([FromBody] Category model, [FromRoute]int id) {
-        //     if(!ModelState.IsValid)
-        //         return BadRequest();
+        [HttpPut("lessons/{id}")]
+        public async Task<IActionResult> UpdateAsync([FromBody] Lesson model, [FromRoute]int id) {
+            if(!ModelState.IsValid)
+                return BadRequest();
 
-        //     var category = await context.Categorys.FirstOrDefaultAsync(x => x.Id == id);
+            var lesson = await context.Lessons.FirstOrDefaultAsync(x => x.Id == id);
 
-        //     if (category == null)
-        //         return NotFound();
+            if (lesson == null)
+                return NotFound();
 
-        //     try {
-        //         category.Name = model.Name;
-        //         category.Icon = model.Icon;
-        //         context.Categorys.Update(category);
-        //         await context.SaveChangesAsync();
-        //         return Ok(category);
-        //     } catch {
-        //         return BadRequest();
-        //     }          
-        // }
+            try {
+                lesson.Title = model.Title;
+                lesson.Description = model.Description;
+                lesson.Instrument = model.Instrument;
+                lesson.Author = model.Author;
+                context.Lessons.Update(lesson);
+                await context.SaveChangesAsync();
+                return Ok(lesson);
+            } catch {
+                return BadRequest();
+            }          
+        }
 
-        // [HttpDelete("categorys/{id}")]
-        // public async Task<IActionResult> DeleteAsync([FromRoute]int id) {
+        [HttpDelete("lessons/{id}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute]int id) {
 
-        //     var category = await context.Categorys.FirstOrDefaultAsync(x => x.Id == id);
+            var lesson = await context.Lessons.FirstOrDefaultAsync(x => x.Id == id);
 
-        //     if (category == null)
-        //         return NotFound();
+            if (lesson == null)
+                return NotFound();
 
-        //     try {
-        //         context.Categorys.Remove(category);
-        //         await context.SaveChangesAsync();
-        //         return Ok(category);
-        //     } catch {
-        //         return BadRequest();
-        //     }          
-        // }
+            try {
+                context.Lessons.Remove(lesson);
+                await context.SaveChangesAsync();
+                return Ok(lesson);
+            } catch {
+                return BadRequest();
+            }          
+        }
     }
 }
