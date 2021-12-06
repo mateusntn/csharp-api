@@ -19,7 +19,7 @@ namespace MyApi.Controllers
 
         [HttpGet("lessons")]
         public async Task<IActionResult> GetAsync() {
-            var lessons = await context.Lessons.ToListAsync();
+            var lessons = await context.Lessons.Include(x => x.Questions).ThenInclude(x => x.Alternatives).ToListAsync();
             return Ok(lessons);
         }
 
@@ -32,20 +32,30 @@ namespace MyApi.Controllers
         [HttpPost("lessons")]
         public async Task<IActionResult> CreateAsync([FromBody] Lesson model) {
             if(!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest();          
 
             var lesson = new Lesson {
                 Title = model.Title,
                 Description = model.Description,
                 Instrument = model.Instrument,
                 Author = model.Author,
+                Genre = model.Genre,
+                Level = model.Level,
+                Article = model.Article,
+                ArticleLegend = model.ArticleLegend,
+                LinkVideo = model.LinkVideo,
+                VideoLegend = model.VideoLegend,
+                PerformanceExercise = model.PerformanceExercise,
+                ExerciseLegend = model.ExerciseLegend,
+                Questions = model.Questions
             };
 
             try {
                 await context.Lessons.AddAsync(lesson);
                 await context.SaveChangesAsync();
                 return Created($"v1/lessons/{lesson.Id}", lesson);
-            } catch {
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
                 return BadRequest();
             }          
         }
@@ -65,6 +75,15 @@ namespace MyApi.Controllers
                 lesson.Description = model.Description;
                 lesson.Instrument = model.Instrument;
                 lesson.Author = model.Author;
+                lesson.Genre = model.Genre;
+                lesson.Level = model.Level;
+                lesson.Article = model.Article;
+                lesson.ArticleLegend = model.ArticleLegend;
+                lesson.LinkVideo = model.LinkVideo;
+                lesson.VideoLegend = model.VideoLegend;
+                lesson.PerformanceExercise = model.PerformanceExercise;
+                lesson.ExerciseLegend = model.ExerciseLegend;
+                lesson.Questions = model.Questions;
                 context.Lessons.Update(lesson);
                 await context.SaveChangesAsync();
                 return Ok(lesson);
