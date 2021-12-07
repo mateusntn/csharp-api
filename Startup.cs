@@ -24,6 +24,12 @@ namespace MyApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ExemploAPI", Version = "v1" });
             });
+            services.AddCors(options => 
+            {
+                options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
+                                                                  .AllowAnyMethod()
+                                                                  .AllowAnyHeader());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,7 +43,7 @@ namespace MyApi
             app.UseSwaggerUI();
 
             app.UseRouting();
-
+            app.UseCors("CorsPolicy");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
