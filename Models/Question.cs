@@ -8,7 +8,8 @@ namespace MyApi.Models
         public string QuestionText { get; set;}
         public List<Alternative> Alternatives { get; set;}
         public string CorrectAlternative { get; set;}
-
+        public int LessonId {get;set;}
+        public Lesson Lesson {get;set;}
         public Question()
         {
         }
