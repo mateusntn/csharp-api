@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +20,23 @@ namespace MyApi.Controllers
 
         [HttpGet("lessons")]
         public async Task<IActionResult> GetAsync() {
-            var lessons = await context.Lessons.Include(x => x.Questions).ThenInclude(x => x.Alternatives).ToListAsync();
+            var lessons = await context.Lessons.ToListAsync();
+            return Ok(lessons);
+        }
+
+        [HttpGet("lessons/filter/")]
+        public async Task<IActionResult> GetAsync([FromQuery] string instrument, [FromQuery] string level) {
+            var lessons = await context.Lessons.ToListAsync();
+            if(!string.IsNullOrEmpty(instrument))
+                lessons = lessons.Where(x => x.Instrument == instrument).ToList();
+            if(!string.IsNullOrEmpty(level))
+                lessons = lessons.Where(x => x.Level == level).ToList();
             return Ok(lessons);
         }
 
         [HttpGet("lessons/{id}")]
         public async Task<IActionResult> GetByIdAsync([FromRoute]int id) {
-            var lesson = await context.Lessons.FirstOrDefaultAsync(x => x.Id == id);
+            var lesson = await context.Lessons.Include(x => x.Questions).ThenInclude(x => x.Alternatives).FirstOrDefaultAsync(x => x.Id == id);
             return lesson != null ? Ok(lesson) : NotFound();
         }
 
